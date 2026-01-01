@@ -25,5 +25,5 @@ for questions in question:
         print(f"Incorrect, the correct answer is option {questions[5]}")
         print("Better luck next time!")
         break
-print("\n🎯Game Over")
+print("Game Over")
 print(f"Your final score is: {score}/{len(question)}")
