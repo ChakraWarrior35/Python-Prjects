@@ -26,8 +26,5 @@ if added == 0:
 else:
     merger.write("merged-pdf.pdf")
     merger.close()
-<<<<<<< HEAD
-    print(f"Merged {added} PDFs into merged-pdf.pdf")
-=======
-    print(f"Merged {added} PDFs into merged-pdf.pdf")
->>>>>>> 29d80fdb279fa93acef6a3942f7a8210de257ef9
+print(f"Merged {added} PDFs into merged-pdf.pdf")
+    
