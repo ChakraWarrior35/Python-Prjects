@@ -1,4 +1,5 @@
 from PyPDF2 import PdfWriter
+from PyPDF2.errors import DependencyError
 import os
 
 merger = PdfWriter()
@@ -18,16 +19,20 @@ for pdf in pdfs:
     if not os.path.exists(pdf):
         print(f"File not found, skipping: {pdf}")
         continue
-    merger.append(pdf)
-    added += 1
+    try:
+        merger.append(pdf)
+        added += 1
+    except DependencyError:
+        print(
+            f"Cannot append {pdf}: PyCryptodome is required for AES-encrypted PDFs.\n"
+            "Install it with: python -m pip install pycryptodome"
+        )
+    except Exception as e:
+        print(f"Failed to append {pdf}: {e}")
 
 if added == 0:
     print("No PDFs were merged. Ensure the files exist and try again.")
 else:
     merger.write("merged-pdf.pdf")
     merger.close()
-<<<<<<< HEAD
-    print(f"Merged {added} PDFs into merged-pdf.pdf")
-=======
-    print(f"Merged {added} PDFs into merged-pdf.pdf")
->>>>>>> 29d80fdb279fa93acef6a3942f7a8210de257ef9
+print(f"Merged {added} PDFs into 'merged-pdf.pdf'")
