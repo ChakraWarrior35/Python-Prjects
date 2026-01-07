@@ -20,13 +20,7 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME}")
 cursor.execute(f"USE {DB_NAME}")
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS tasks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    status VARCHAR(20) NOT NULL
-)
-""")
+cursor.execute("CREATE TABLE IF NOT EXISTS tasks (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, status VARCHAR(20) NOT NULL)")
 conn.commit()
 
 def display_tasks():
