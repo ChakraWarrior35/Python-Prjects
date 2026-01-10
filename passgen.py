@@ -1,5 +1,3 @@
-# it's a password generation automatically generate a strong password
-
 import random
 import string
 
