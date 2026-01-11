@@ -1,4 +1,3 @@
-# rock paoer and seaser game
 import random
 print("Welcome to Rock, Paper, Scissors Game!")
 choices = ["rock", "paper", "scissors"]
