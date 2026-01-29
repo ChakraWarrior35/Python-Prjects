@@ -1,8 +1,28 @@
 import tkinter as tk
 from tkinter import messagebox
+import mysql.connector
 import os
+from dotenv import load_dotenv
 
-FILE_NAME = "expenses.txt"
+load_dotenv()
+
+mydb = mysql.connector.connect(
+    host=os.getenv("Host"),
+    user=os.getenv("User"),
+    password=os.getenv("Password"),
+    database=os.getenv("Database", "expenses_db")
+)
+
+cursor = mydb.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS expenses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    amount DOUBLE
+)
+""")
+mydb.commit()
 
 def add_expense():
     name = entry_name.get()
@@ -18,24 +38,28 @@ def add_expense():
         messagebox.showerror("Error", "Amount must be number")
         return
 
-    with open(FILE_NAME, "a") as f:
-        f.write(f"{name},{amount}\n")
+    cursor.execute(
+        "INSERT INTO expenses (name, amount) VALUES (%s, %s)",
+        (name, amount)
+    )
+    mydb.commit()
 
     entry_name.delete(0, tk.END)
     entry_amount.delete(0, tk.END)
+
     messagebox.showinfo("Success", "Expense Added")
     show_expenses()
 
 def show_expenses():
     listbox.delete(0, tk.END)
-    total = 0
 
-    if os.path.exists(FILE_NAME):
-        with open(FILE_NAME, "r") as f:
-            for line in f:
-                name, amount = line.strip().split(",")
-                listbox.insert(tk.END, f"{name} - ₹{amount}")
-                total += float(amount)
+    cursor.execute("SELECT name, amount FROM expenses")
+    rows = cursor.fetchall()
+
+    total = 0
+    for row in rows:
+        listbox.insert(tk.END, f"{row[0]} - ₹{row[1]}")
+        total += float(row[1])
 
     label_total.config(text=f"Total Expense: ₹{total}")
 
@@ -62,3 +86,5 @@ label_total.pack(pady=10)
 show_expenses()
 
 root.mainloop()
+
+mydb.close()
